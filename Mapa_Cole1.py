@@ -40,7 +40,7 @@
 #os.getcwd()
 
 
-# In[21]:
+# In[65]:
 
 
 ##########Leer el archivo Excel-----------------
@@ -54,7 +54,7 @@ tables = pd.read_html("src/listado_iiee.xls")
 print(f"Se encontraron {len(tables)} tablas.")
 
 
-# In[5]:
+# In[66]:
 
 
 tables[0].head()
@@ -493,6 +493,11 @@ st.markdown("Este mapa muestra las escuelas primarias, secundarias e iniciales e
 st.components.v1.html(m._repr_html_(), height=600)
 
 
+# ####################ESTOY QUITANDO EL SEGUNDO MAPA INTERACTIVO PORQUE GENERABA PROBLEMAS POR SER ALGO PESADO Y TARDABA EN CARGAR
+# 
+# 
+# 
+# #################################################################################################
 # #Task 2: High School Proximity Visualization (Huancavelica y Ayacucho)
 # from shapely.geometry import Point
 # import folium
@@ -545,66 +550,62 @@ st.components.v1.html(m._repr_html_(), height=600)
 # m_proximidad.save('high_school_proximity_map.html')
 # 
 
-# In[ ]:
-
-
-import folium
-import geopandas as gpd
-import streamlit as st
-from shapely.geometry import Point
-import pandas as pd
-
-# --- 1. Filtrar las escuelas primarias y secundarias en Huancavelica y Ayacucho ---
-escuelas_primarias_region = escuelas_region[
-    escuelas_region['Nivel / Modalidad'].str.contains("Primaria", case=False, na=False)
-].copy()
-escuelas_secundarias_region = escuelas_region[
-    escuelas_region['Nivel / Modalidad'].str.contains("Secundaria", case=False, na=False)
-].copy()
-
-# --- 2. Crear un mapa base para la visualización ---
-m_proximidad = folium.Map(location=[-9.19, -75.0152], zoom_start=6)
-
-# --- 3. Para cada escuela primaria en Huancavelica y Ayacucho: ---
-for index, primaria in escuelas_primarias_region.iterrows():
-    # Obtener las coordenadas de la escuela primaria
-    lat_primaria, lon_primaria = primaria['Latitud'], primaria['Longitud']
-
-    # Crear un marcador para la escuela primaria
-    folium.Marker([lat_primaria, lon_primaria], popup=primaria['Nombre de SS.EE.'], icon=folium.Icon(color='blue')).add_to(m_proximidad)
-
-    # Crear un círculo con radio de 5 km alrededor de la escuela primaria
-    folium.Circle(
-        location=[lat_primaria, lon_primaria],
-        radius=5000,
-        color='blue',
-        fill=True,
-        fill_color='blue',
-        fill_opacity=0.2
-    ).add_to(m_proximidad)
-
-    # Filtrar las escuelas secundarias dentro del radio de 5 km
-    for index_secundaria, secundaria in escuelas_secundarias_region.iterrows():
-        lat_secundaria, lon_secundaria = secundaria['Latitud'], secundaria['Longitud']
-
-        # Calcular la distancia entre la primaria y la secundaria
-        distancia = Point(lon_primaria, lat_primaria).distance(Point(lon_secundaria, lat_secundaria)) * 100000  # en metros
-
-        # Si la secundaria está dentro de los 5 km
-        if distancia <= 5000:
-            folium.Marker(
-                [lat_secundaria, lon_secundaria], 
-                popup=secundaria['Nombre de SS.EE.'], 
-                icon=folium.Icon(color='red')
-            ).add_to(m_proximidad)
-
-# Mostrar el mapa en Streamlit
-st.title("Mapa de Proximidad de Escuelas Secundarias a Escuelas Primarias")
-st.markdown("Este mapa muestra las escuelas primarias en Huancavelica y Ayacucho, junto con las escuelas secundarias dentro de un radio de 5 km.")
-
-# Renderizar el mapa en Streamlit usando folium
-st.components.v1.html(m_proximidad._repr_html_(), height=600)
-
+# import folium
+# import geopandas as gpd
+# import streamlit as st
+# from shapely.geometry import Point
+# import pandas as pd
+# 
+# # --- 1. Filtrar las escuelas primarias y secundarias en Huancavelica y Ayacucho ---
+# escuelas_primarias_region = escuelas_region[
+#     escuelas_region['Nivel / Modalidad'].str.contains("Primaria", case=False, na=False)
+# ].copy()
+# escuelas_secundarias_region = escuelas_region[
+#     escuelas_region['Nivel / Modalidad'].str.contains("Secundaria", case=False, na=False)
+# ].copy()
+# 
+# # --- 2. Crear un mapa base para la visualización ---
+# m_proximidad = folium.Map(location=[-9.19, -75.0152], zoom_start=6)
+# 
+# # --- 3. Para cada escuela primaria en Huancavelica y Ayacucho: ---
+# for index, primaria in escuelas_primarias_region.iterrows():
+#     # Obtener las coordenadas de la escuela primaria
+#     lat_primaria, lon_primaria = primaria['Latitud'], primaria['Longitud']
+#     
+#     # Crear un marcador para la escuela primaria
+#     folium.Marker([lat_primaria, lon_primaria], popup=primaria['Nombre de SS.EE.'], icon=folium.Icon(color='blue')).add_to(m_proximidad)
+#     
+#     # Crear un círculo con radio de 5 km alrededor de la escuela primaria
+#     folium.Circle(
+#         location=[lat_primaria, lon_primaria],
+#         radius=5000,
+#         color='blue',
+#         fill=True,
+#         fill_color='blue',
+#         fill_opacity=0.2
+#     ).add_to(m_proximidad)
+#     
+#     # Filtrar las escuelas secundarias dentro del radio de 5 km
+#     for index_secundaria, secundaria in escuelas_secundarias_region.iterrows():
+#         lat_secundaria, lon_secundaria = secundaria['Latitud'], secundaria['Longitud']
+#         
+#         # Calcular la distancia entre la primaria y la secundaria
+#         distancia = Point(lon_primaria, lat_primaria).distance(Point(lon_secundaria, lat_secundaria)) * 100000  # en metros
+#         
+#         # Si la secundaria está dentro de los 5 km
+#         if distancia <= 5000:
+#             folium.Marker(
+#                 [lat_secundaria, lon_secundaria], 
+#                 popup=secundaria['Nombre de SS.EE.'], 
+#                 icon=folium.Icon(color='red')
+#             ).add_to(m_proximidad)
+# 
+# # Mostrar el mapa en Streamlit
+# st.title("Mapa de Proximidad de Escuelas Secundarias a Escuelas Primarias")
+# st.markdown("Este mapa muestra las escuelas primarias en Huancavelica y Ayacucho, junto con las escuelas secundarias dentro de un radio de 5 km.")
+# 
+# # Renderizar el mapa en Streamlit usando folium
+# st.components.v1.html(m_proximidad._repr_html_(), height=600)
 
 # Terreno: La región de Huancavelica y Ayacucho tiene terrenos montañosos, lo que podría dificultar el acceso a escuelas secundarias cercanas, especialmente en áreas rurales.
 # 
