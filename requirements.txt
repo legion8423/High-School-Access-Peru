@@ -1,0 +1,15 @@
+numpy
+streamlit
+matplotlib
+plotly
+pandas
+scipy
+ipykernel
+nbformat
+geopandas
+folium
+openpyxl
+nbconvert
+lxml
+xlrd
+geopy
